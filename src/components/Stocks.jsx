@@ -5,6 +5,8 @@ import { parse } from "papaparse";
 
 const Stocks = (props) => {
 
+    const [AllStocks, setAllStocks] = useState([]);
+
     useEffect(() => {
         getStocks();
     }, [])
@@ -14,11 +16,13 @@ const Stocks = (props) => {
         fetch(url, { method: "GET" })
             .then((response) => response.text())
             .then(data => {
-                let aTableData = parse(data);
-                console.log(aTableData);
+                if (data) {
+                    let aTableData = parse(data);
+                    setAllStocks(aTableData.data);
+                }
             })
     }
-    return (<div>Stocks</div>)
+    return (<div>Stocks{AllStocks.length > 0  && AllStocks[0][0]}</div>)
 }
 
 export default Stocks;
