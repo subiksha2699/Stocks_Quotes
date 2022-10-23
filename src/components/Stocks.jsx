@@ -14,6 +14,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { CustomInput } from "../ExtendedComponents/CustomInputs";
 import FuzzySearch from 'fuzzy-search';
+import { useNavigate } from "react-router-dom";
 
 const Stocks = (props) => {
 
@@ -23,7 +24,7 @@ const Stocks = (props) => {
     const [allrows, setallRows] = useState([]);
 
     const [searchText, setsearchText] = useState("");
-
+    const navigate = useNavigate();
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
             backgroundColor: "#FAFAFA",
@@ -136,7 +137,7 @@ const Stocks = (props) => {
                                             component="button"
                                             variant="body2"
                                             onClick={() => {
-                                                console.info("I'm a button.");
+                                                navigate(`/quotes/${row.symbol}`)
                                             }}
                                         >
                                             {row.symbol}

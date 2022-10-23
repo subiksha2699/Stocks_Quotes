@@ -19,7 +19,7 @@ function App() {
           <Suspense fallback={<>...</>}>
             <Routes>
               <Route path="/stocks" exact element={<Stocks />}></Route>
-              <Route path="/quotes" exact element={<Quotes />}></Route>
+              <Route path="/quotes/:symbol" exact element={<Quotes />}></Route>
               <Route path="*" element={<Navigate to="/stocks" replace />} />
             </Routes>
           </Suspense>
