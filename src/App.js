@@ -1,7 +1,7 @@
 import "./App.css";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "@mui/material";
 import { customTheme } from "./utility/theme";
-import { lazy,Suspense } from "react";
+import { lazy, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,15 +14,17 @@ const Quotes = lazy(() => import("./components/Quotes"));
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
-      <Router>
-        <Suspense fallback={<>...</>}>
-          <Routes>
-            <Route path="/stocks" exact element={<Stocks />}></Route>
-            <Route path="/quotes" exact element={<Quotes />}></Route>
-            <Route path="*" element={<Navigate to="/stocks" replace />} />
-          </Routes>
-        </Suspense>
-      </Router>
+      <div style={{ height: "100vh", overflow: "hidden",background:"#FFFAFA" }}>
+        <Router>
+          <Suspense fallback={<>...</>}>
+            <Routes>
+              <Route path="/stocks" exact element={<Stocks />}></Route>
+              <Route path="/quotes" exact element={<Quotes />}></Route>
+              <Route path="*" element={<Navigate to="/stocks" replace />} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </div>
     </ThemeProvider>
   );
 }
