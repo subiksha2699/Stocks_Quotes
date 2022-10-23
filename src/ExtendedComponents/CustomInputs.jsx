@@ -7,7 +7,7 @@ export const CustomInput = (props) => {
     ...style,
     width: "17rem",
     height: "32px",
-    backgroundColor: theme => theme.palette.background.secondary,
+    backgroundColor: theme => theme.palette.background.paper,
     borderRadius: "5px",
     border: "0.5px solid #E0E0E0",
     padding: "5px",
