@@ -68,7 +68,8 @@ const Stocks = (props) => {
                 if (data) {
                     let aTableData = parse(data);
                     setAllStocks(aTableData.data);
-                    setColumns(aTableData.data[0]);
+                    let cols = aTableData.data[0].slice(0,3);
+                    setColumns(cols);
                     let rows = aTableData.data.slice(1);
                     rows = rows.map(item => {
                         return {
@@ -94,7 +95,7 @@ const Stocks = (props) => {
                 let fussySearchRes = searcher.search(searchText);
                 // console.log(fussySearchRes);
                 setRows(fussySearchRes);
-            }, 2000)
+            }, 500)
             return () => clearTimeout(searchData);
         }
         else
@@ -145,7 +146,7 @@ const Stocks = (props) => {
                                     </StyledTableCell>
                                     <StyledTableCell align="left">{row.name}</StyledTableCell>
                                     <StyledTableCell align="left">{row.sector}</StyledTableCell>
-                                    <StyledTableCell align="left">{row.validTill}</StyledTableCell>
+                                    {/* <StyledTableCell align="left">{row.validTill}</StyledTableCell> */}
                                 </StyledTableRow>
                             ))}
                         </TableBody>

@@ -9,24 +9,50 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { useNavigate } from "react-router-dom";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { formatDateobjToDateString } from "../utility/utilityFunctions";
 
 const Quotes = (props) => {
     const { symbol } = useParams();
     const [allQuotes, setallQuotes] = useState([]);
     const listHeader = ["Price", "Time", "ValidTill"];
     const navigate = useNavigate();
+    // var t;
 
 
     function getQuotes() {
-        fetchWrapper(`/InputService/v2/quotes/${symbol}`, { method: "GET" })
-            .then((data) => {
-                setallQuotes(data.payload[symbol])
-                console.log(data.payload[symbol]);
-            })
+        return new Promise(function (resolve, reject) {
+            fetchWrapper(`/InputService/v2/quotes/${symbol}`, { method: "GET" })
+                .then((data) => {
+                    if (data.success) {
+                        setallQuotes(data.payload[symbol])
+                        resolve(true);
+                        console.log(data.payload[symbol]);
+                    }
+                    else {
+                        reject(false);
+                    }
+                })
+        }.bind(this));
     }
-    useEffect(() => {
-        getQuotes();
+
+    
+     useEffect(() => {
+        let getQuotesPromise = getQuotes();
+        getQuotesPromise.then((val) => {
+            checkDateValidity();
+            // interval();
+        })
     }, [])
+
+
+    function checkDateValidity() {
+        var isexpired = allQuotes.some((item) => new Date(item.valid_till) < new Date())
+        console.log(isexpired);
+        if (isexpired)
+            getQuotes();
+        setTimeout(checkDateValidity, 10000);
+    }
+
     const sortDescending = () => {
         let quotes = structuredClone(allQuotes);
         quotes.sort(function (a, b) {
@@ -39,12 +65,16 @@ const Quotes = (props) => {
         quotes.sort((a, b) => new Date(a.time) - new Date(b.time));
         setallQuotes(quotes)
     }
+    function navigateBack() {
+        navigate("/stocks");
+        // clearTimeout(t);
+    }
     return (<div>
-        <Toolbar sx={{ justifyContent: "space-between", alignItems: "center", minHeight: "34px!important",marginTop:"10px" }}>
+        <Toolbar sx={{ justifyContent: "space-between", alignItems: "center", minHeight: "34px!important", marginTop: "10px" }}>
             <Stack direction="row" sx={{ marginLeft: "10px" }}>
-                <ArrowBackIosIcon fontSize="small" onClick={() => navigate("/stocks")} style={{cursor:"pointer"}} />
+                <ArrowBackIosIcon fontSize="small" onClick={() => navigateBack()} style={{ cursor: "pointer" }} />
                 <Breadcrumbs >
-                    <Link underline="hover" color="inherit" href="/" onClick={() => navigate("/stocks")}>
+                    <Link underline="hover" style={{ cursor: "pointer" }} color="inherit" onClick={() => navigateBack()}>
                         Stocks
                     </Link>
                     <Typography color="text.primary">Quotes</Typography>
@@ -133,16 +163,17 @@ const Quotes = (props) => {
                         spacing={2}
                         sx={{
                             background: '#FFFAFC',
-                            padding: "15px"
+                            padding: "10px",
+                            borderBottom: "0.5px solid #E0E0E0"
                         }}>
                         <Typography>
                             {row.price}
                         </Typography>
                         <Typography>
-                            {row.time}
+                            {formatDateobjToDateString(row.time)}
                         </Typography>
                         <Typography>
-                            {row.valid_till}
+                            {formatDateobjToDateString(row.valid_till)}
                         </Typography>
                     </Stack>
                 ))}
